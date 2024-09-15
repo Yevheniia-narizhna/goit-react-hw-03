@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import ContactList from "./ContactList/ContactList";
 import SearchBox from "./SearchBox/SearchBox";
@@ -6,7 +6,14 @@ import contactData from "./contact.json";
 import ContactForm from "./ContactForm/ContactForm";
 
 function App() {
-  const [contacts, setContacts] = useState(contactData); //ContactList//
+  const [contacts, setContacts] = useState(() => {
+    const contactSave = window.localStorage.getItem("NewContacts");
+    return contactSave ? JSON.parse(contactSave) : contactData;
+  }); //ContactList//
+
+  useEffect(() => {
+    window.localStorage.setItem("NewContacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const [filter, setFilter] = useState(""); //Searchbox//
   const handleChange = (e) => {
